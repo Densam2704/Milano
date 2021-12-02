@@ -12,7 +12,7 @@ object STG_3 {
 
     val stg_3_result = joinDFs(pollution_df, legend_df)
 
-    Parameters.writeDFToFile(stg_3_result, Parameters.STG_3_result_path)
+//    Parameters.writeDFToFile(stg_3_result, Parameters.STG_3_result_path)
 
     println("Stage 3 finished")
 
@@ -49,8 +49,8 @@ object STG_3 {
       )
       .drop($"MEASUREMENT")
       .withColumnRenamed("NEW_MEASUREMENT", "MEASUREMENT")
-      //заполнить 0ми радиус
-      .withColumn("SENSOR_RADIUS", when($"SENSOR_ID" > 0, 1000))
+      //заполнить радиус
+      .withColumn("SENSOR_RADIUS", when($"SENSOR_ID" > 0, 235))
       .select($"SENSOR_ID",
         $"TIME_INSTANT",
         $"MEASUREMENT",

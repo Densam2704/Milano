@@ -5,13 +5,15 @@ import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.functions.{first, row_number}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.types.{ArrayType, StructType}
+import org.apache.spark.storage.StorageLevel.MEMORY_ONLY
 import pkg.domain.{Grid, Legend, Pollution, Telecommunications}
 
 object Parameters {
 
   //имена исходных данных
-  val telecommunications_december_name = "telecommunications_december"
-  val telecommunications_november_name = "telecommunications_november"
+  val telecommunications_name = "telecommunications"
+  //  val telecommunications_december_name = "telecommunications_december"
+  //  val telecommunications_november_name = "telecommunications_november"
   val pollution_name = "pollution"
   val legend_name = "legend"
   val grid_name = " grid"
@@ -29,8 +31,9 @@ object Parameters {
   val STG_4_unknown_result_name = "unknown"
 
   //пути к исходным данным
-  var telecommunications_december_path = "/data/Milano/december/*"
-  var telecommunications_november_path = "/data/Milano/november/*"
+  var telecommunications_path = "/data/Milano/telecommunications/*"
+  //  var telecommunications_december_path = "/data/Milano/telecommunications/december/*"
+  //  var telecommunications_november_path = "/data/Milano/telecommunications/november/*"
   var legend_path = "/data/Milano/pollution-legend-mi.csv"
   var pollution_path = "/data/Milano/pollution-mi/*"
   var grid_path = "/data/Milano/milano-grid/*"
@@ -51,8 +54,7 @@ object Parameters {
   def initialisePaths(args: Array[String]): Unit = {
     args.length match {
       case 1 =>
-        telecommunications_december_path = args(0) + "/Milano/december/*"
-        telecommunications_november_path = args(0) + "/Milano/november/*"
+        telecommunications_path = args(0) + "/Milano/telecommunications/*"
         legend_path = args(0) + "/Milano/pollution-legend-mi.csv"
         pollution_path = args(0) + "/Milano/pollution-mi/*"
         grid_path = args(0) + "/Milano/milano-grid/*"
@@ -200,23 +202,13 @@ object Parameters {
 
   def readTelecommunications()(implicit sparkSession: SparkSession): DataFrame = {
 
-    val telecommunications_november_df = readDF(
-      telecommunications_november_name,
+    val telecommunications_df = readDF(
+      telecommunications_name,
       Telecommunications.SCHEMA,
-      telecommunications_november_path,
+      telecommunications_path,
       Telecommunications.DELIMITER
     )
-
-    val telecommunications_december_df = Parameters.readDF(
-      Parameters.telecommunications_december_name,
-      Telecommunications.SCHEMA,
-      Parameters.telecommunications_december_path,
-      Telecommunications.DELIMITER
-    )
-
-    val united = telecommunications_december_df.union(telecommunications_november_df).toDF()
-
-    united
+    telecommunications_df
   }
 
   def writeDFToFile(df: DataFrame, fileName: String, format: String = "com.databricks.spark.csv")

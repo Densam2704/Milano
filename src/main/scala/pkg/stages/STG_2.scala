@@ -13,7 +13,7 @@ object STG_2 {
 
     val STG2_result = joinDFs(stg1_df: DataFrame, grid_df: DataFrame)
 
-    Parameters.writeDFToFile(STG2_result, Parameters.STG_2_result_path)
+//    Parameters.writeDFToFile(STG2_result, Parameters.STG_2_result_path)
 
     println("Stage 2 finished")
 
@@ -49,9 +49,12 @@ object STG_2 {
         $"X5",
         $"Y5"
       )
+      //Центр квадрата
       .withColumn("X_Center",($"X1"+$"X2")/2)
       .withColumn("Y_Center",($"Y1"+$"Y3")/2)
+      //Коэффициент перевода из координаты X в метры
       .withColumn("COEFF_X",($"X2"-$"X1")/235)
+      //Коэффициент перевода из координаты Y в метры
       .withColumn("COEFF_Y",($"Y1"-$"Y3")/235)
 
     stg_2_result
