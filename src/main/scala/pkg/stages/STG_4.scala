@@ -30,40 +30,45 @@ object STG_4 {
     val joined = stg_2_df.alias("s2")
       .join(stg_3_df.alias("s3"),
         //если координаты попадают в квадрат, то соединяем
-        $"s3.SENSOR_LAT" > $"s2.X3" &&
-          $"s3.SENSOR_LAT" < $"s2.X1" &&
-          $"s3.SENSOR_LONG" > $"s2.Y4" &&
-          $"s3.SENSOR_LONG" < $"s2.Y2",
-        "left"
-      )
-      .select($"s2.SQUARE_ID",
-        $"s2.SQUARE_ZONE_TYPE",
-        $"s2.GENERAL_SQUARE_ACTIVITY",
-        $"s2.MIN_SQUARE_ACTIVITY",
-        $"s2.MAX_SQUARE_ACTIVITY",
-        $"s2.AVG_SQUARE_ACTIVITY",
-        $"s2.CELL_ID",
-        $"s2.X1",
-        $"s2.Y1",
-        $"s2.X2",
-        $"s2.Y2",
-        $"s2.X3",
-        $"s2.Y3",
-        $"s2.X4",
-        $"s2.Y4",
-        $"s2.X5",
-        $"s2.Y5",
-        $"s3.SENSOR_ID",
-        $"s3.TIME_INSTANT",
-        $"s3.MEASUREMENT",
-        $"s3.SENSOR_STREET_NAME",
-        $"s3.SENSOR_LAT",
-        $"s3.SENSOR_LONG",
-        $"s3.SENSOR_RADIUS",
-        $"s3.SENSOR_TYPE",
-        $"s3.UOM",
-        $"s3.TIME_INSTANT_FORMAT"
-      )
+        //        $"s3.SENSOR_LAT" > $"s2.X3" &&
+        //          $"s3.SENSOR_LAT" < $"s2.X1" &&
+        //          $"s3.SENSOR_LONG" > $"s2.Y4" &&
+        //          $"s3.SENSOR_LONG" < $"s2.Y2"
+        (($"s2.X_CENTER" - $"s3.SENSOR_LAT") * ($"s2.X_CENTER" - $"s3.SENSOR_LAT") * $"s2.COEFF_X"
+          +
+          ($"s2.Y_CENTER" - $"s3.SENSOR_LONG") * ($"s2.X_CENTER" - $"s3.SENSOR_LONG")) * $"s2.COEFF_Y"
+          < $"s3.SENSOR_RADIUS" * $"s3.SENSOR_RADIUS"
+    ,
+    "left"
+    )
+    .select($"s2.SQUARE_ID",
+      $"s2.SQUARE_ZONE_TYPE",
+      $"s2.GENERAL_SQUARE_ACTIVITY",
+      $"s2.MIN_SQUARE_ACTIVITY",
+      $"s2.MAX_SQUARE_ACTIVITY",
+      $"s2.AVG_SQUARE_ACTIVITY",
+      $"s2.CELL_ID",
+      $"s2.X1",
+      $"s2.Y1",
+      $"s2.X2",
+      $"s2.Y2",
+      $"s2.X3",
+      $"s2.Y3",
+      $"s2.X4",
+      $"s2.Y4",
+      $"s2.X5",
+      $"s2.Y5",
+      $"s3.SENSOR_ID",
+      $"s3.TIME_INSTANT",
+      $"s3.MEASUREMENT",
+      $"s3.SENSOR_STREET_NAME",
+      $"s3.SENSOR_LAT",
+      $"s3.SENSOR_LONG",
+      $"s3.SENSOR_RADIUS",
+      $"s3.SENSOR_TYPE",
+      $"s3.UOM",
+      $"s3.TIME_INSTANT_FORMAT"
+    )
     joined
   }
 

@@ -49,6 +49,10 @@ object STG_2 {
         $"X5",
         $"Y5"
       )
+      .withColumn("X_Center",($"X1"+$"X2")/2)
+      .withColumn("Y_Center",($"Y1"+$"Y3")/2)
+      .withColumn("COEFF_X",($"X2"-$"X1")/235)
+      .withColumn("COEFF_Y",($"Y1"-$"Y3")/235)
 
     stg_2_result
 
