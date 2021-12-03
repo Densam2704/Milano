@@ -50,7 +50,7 @@ object STG_3 {
       .drop($"MEASUREMENT")
       .withColumnRenamed("NEW_MEASUREMENT", "MEASUREMENT")
       //заполнить радиус
-      .withColumn("SENSOR_RADIUS", when($"SENSOR_ID" > 0, 235))
+      .withColumn("SENSOR_RADIUS", when($"SENSOR_ID" > 0, 500))
       .select($"SENSOR_ID",
         $"TIME_INSTANT",
         $"MEASUREMENT",

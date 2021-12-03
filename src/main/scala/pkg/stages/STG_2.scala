@@ -53,9 +53,9 @@ object STG_2 {
       .withColumn("X_Center",($"X1"+$"X2")/2)
       .withColumn("Y_Center",($"Y1"+$"Y3")/2)
       //Коэффициент перевода из координаты X в метры
-      .withColumn("COEFF_X",($"X2"-$"X1")/235)
+      .withColumn("COEFF_X",235/($"X2"-$"X1"))
       //Коэффициент перевода из координаты Y в метры
-      .withColumn("COEFF_Y",($"Y1"-$"Y3")/235)
+      .withColumn("COEFF_Y",235/($"Y1"-$"Y3"))
 
     stg_2_result
 
