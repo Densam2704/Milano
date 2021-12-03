@@ -35,10 +35,11 @@ object STG_4 {
         //          $"s3.SENSOR_LONG" > $"s2.Y4" &&
         //          $"s3.SENSOR_LONG" < $"s2.Y2"
 
+        // Формула соединения
+        // Расстояние от центра квадрата до сенсора < Радиус сенсора
         ($"s2.X_CENTER" - $"s3.SENSOR_LAT") * ($"s2.X_CENTER" - $"s3.SENSOR_LAT") * $"s2.COEFF_X" * $"s2.COEFF_X"
           +
           ($"s2.Y_CENTER" - $"s3.SENSOR_LONG") * ($"s2.X_CENTER" - $"s3.SENSOR_LONG") * $"s2.COEFF_Y" * $"s2.COEFF_Y"
-
           < $"s3.SENSOR_RADIUS" * $"s3.SENSOR_RADIUS"
         ,
         "left"
