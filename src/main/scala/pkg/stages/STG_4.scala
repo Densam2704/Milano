@@ -30,10 +30,18 @@ object STG_4 {
     val joined = stg_2_df.alias("s2")
       .join(stg_3_df.alias("s3"),
         //если координаты попадают в квадрат, то соединяем
-        $"s3.SENSOR_LAT" > $"s2.X3" &&
-          $"s3.SENSOR_LAT" < $"s2.X1" &&
-          $"s3.SENSOR_LONG" > $"s2.Y4" &&
-          $"s3.SENSOR_LONG" < $"s2.Y2",
+        //        $"s3.SENSOR_LAT" > $"s2.X3" &&
+        //          $"s3.SENSOR_LAT" < $"s2.X1" &&
+        //          $"s3.SENSOR_LONG" > $"s2.Y4" &&
+        //          $"s3.SENSOR_LONG" < $"s2.Y2"
+
+        // Формула соединения
+        // Расстояние от центра квадрата до сенсора < Радиус сенсора
+        ($"s2.X_CENTER" - $"s3.SENSOR_LAT") * ($"s2.X_CENTER" - $"s3.SENSOR_LAT") * $"s2.COEFF_X" * $"s2.COEFF_X"
+          +
+          ($"s2.Y_CENTER" - $"s3.SENSOR_LONG") * ($"s2.X_CENTER" - $"s3.SENSOR_LONG") * $"s2.COEFF_Y" * $"s2.COEFF_Y"
+          < $"s3.SENSOR_RADIUS" * $"s3.SENSOR_RADIUS"
+        ,
         "left"
       )
       .select($"s2.SQUARE_ID",
@@ -103,8 +111,7 @@ object STG_4 {
       .where($"SQUARE_ZONE_TYPE" === "living" || $"SQUARE_ZONE_TYPE" === "working")
       .orderBy($"SQUARE_POLLUTION".desc)
       .limit(5)
-    //      res.show()
-
+    res.show()
 
 
     res
@@ -118,7 +125,7 @@ object STG_4 {
         .where($"SQUARE_POLLUTION" > 0)
         .orderBy($"SQUARE_POLLUTION".asc)
         .limit(5)
-    //    res.show()
+    res.show()
     res
 
   }
@@ -129,6 +136,7 @@ object STG_4 {
 
     val res = df.where($"SENSOR_COUNT" === 0 || $"SQUARE_ZONE_TYPE" === "none")
 
+    res.show
 
     res
 

@@ -30,7 +30,7 @@ object STG_1 {
 
     val stg_1_result = groupBySquare(united)
 
-    Parameters.writeDFToFile(stg_1_result, Parameters.STG_1_result_path)
+    //    Parameters.writeDFToFile(stg_1_result, Parameters.STG_1_result_path)
 
     println("Stage 1 finished")
 

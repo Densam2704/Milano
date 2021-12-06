@@ -4,8 +4,20 @@ import org.apache.spark.sql.functions._
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import pkg.system.Parameters
 
+import scala.util.Try
+
 
 object STG_2 {
+
+  private def get_coeff_udf = udf((x1: Double, x2: Double) => {
+    val d = 235
+    (x1, x2) match {
+      case (x1: Double, x2: Double) if x1 < x2 => d / (x2 - x1)
+      case (x1: Double, x2: Double) if x2 < x1 => d / (x1 - x2)
+      case _ => 0
+    }
+
+  })
 
   def getResults(stg1_df: DataFrame, grid_df: DataFrame)(implicit spark: SparkSession): DataFrame = {
 
@@ -13,11 +25,12 @@ object STG_2 {
 
     val STG2_result = joinDFs(stg1_df: DataFrame, grid_df: DataFrame)
 
-    Parameters.writeDFToFile(STG2_result, Parameters.STG_2_result_path)
+    //    Parameters.writeDFToFile(STG2_result, Parameters.STG_2_result_path)
 
     println("Stage 2 finished")
 
     STG2_result
+
   }
 
   private def joinDFs(stg1_df: DataFrame, grid_df: DataFrame)(implicit spark: SparkSession): DataFrame = {
@@ -49,6 +62,13 @@ object STG_2 {
         $"X5",
         $"Y5"
       )
+      //Центр квадрата
+      .withColumn("X_Center", ($"X1" + $"X2") / 2)
+      .withColumn("Y_Center", ($"Y1" + $"Y3") / 2)
+      //Коэффициент перевода расстояния в координатах X в метры
+      .withColumn("COEFF_X", get_coeff_udf($"X1", $"X2"))
+      //Коэффициент перевода расстояния в координатах Y в метры
+      .withColumn("COEFF_Y", get_coeff_udf($"Y1", $"Y3"))
 
     stg_2_result
 
