@@ -12,7 +12,7 @@ object STG_3 {
 
     val stg_3_result = joinDFs(pollution_df, legend_df)
 
-//    Parameters.writeDFToFile(stg_3_result, Parameters.STG_3_result_path)
+    //    Parameters.writeDFToFile(stg_3_result, Parameters.STG_3_result_path)
 
     println("Stage 3 finished")
 

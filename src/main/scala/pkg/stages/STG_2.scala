@@ -9,11 +9,11 @@ import scala.util.Try
 
 object STG_2 {
 
-  private def get_coeff_udf = udf((x1:Double,x2:Double)=>{
+  private def get_coeff_udf = udf((x1: Double, x2: Double) => {
     val d = 235
-    (x1,x2) match {
-      case (x1:Double,x2:Double) if x1<x2 => d/(x2-x1)
-      case (x1:Double,x2:Double) if x2<x1 => d/(x1-x2)
+    (x1, x2) match {
+      case (x1: Double, x2: Double) if x1 < x2 => d / (x2 - x1)
+      case (x1: Double, x2: Double) if x2 < x1 => d / (x1 - x2)
       case _ => 0
     }
 
@@ -30,6 +30,7 @@ object STG_2 {
     println("Stage 2 finished")
 
     STG2_result
+
   }
 
   private def joinDFs(stg1_df: DataFrame, grid_df: DataFrame)(implicit spark: SparkSession): DataFrame = {
@@ -65,11 +66,11 @@ object STG_2 {
       .withColumn("X_Center", ($"X1" + $"X2") / 2)
       .withColumn("Y_Center", ($"Y1" + $"Y3") / 2)
       //Коэффициент перевода расстояния в координатах X в метры
-      .withColumn("COEFF_X",get_coeff_udf($"X1",$"X2"))
+      .withColumn("COEFF_X", get_coeff_udf($"X1", $"X2"))
       //Коэффициент перевода расстояния в координатах Y в метры
-      .withColumn("COEFF_Y", get_coeff_udf($"Y1",$"Y3"))
+      .withColumn("COEFF_Y", get_coeff_udf($"Y1", $"Y3"))
 
-        stg_2_result
+    stg_2_result
 
   }
 }
